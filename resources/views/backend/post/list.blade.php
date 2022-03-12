@@ -10,6 +10,7 @@
 </head>
 <body>
 <a class="btn btn-primary" href="{{route('posts.store')}}">Create Posts</a>
+<a class="btn btn-danger" href="{{route('login')}}">Logout</a>
 <table border="1" class="table" style="text-align: center">
     <thead class="thead-dark" style="text-align: center">
     <tr>

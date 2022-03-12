@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::prefix('posts')->group(function (){
+Route::middleware('checkAuth')->group(function (){
     Route::get('index',[PostController::class,'index'])->name('posts.index');
     Route::get('/create',[PostController::class,'create'])->name('post.create');
     Route::post('/create',[PostController::class,'store'])->name('posts.store');
@@ -26,5 +27,10 @@ Route::prefix('posts')->group(function (){
     Route::get('/index/{id}/update',[PostController::class,'edit'])->name('post.edit');
     Route::post('/index/{id}/update',[PostController::class,'update'])->name('posts.update');
     Route::get('/index/{id}/destroy',[PostController::class,'destroy'])->name('posts.destroy');
-
 });
+Route::get('/login',[AuthController::class,'showFormLogin'])->name('showFormLogin');
+Route::post('/login',[AuthController::class,'login'])->name('login');
+Route::get('/register',[AuthController::class,'showFormRegister'])->name('showFormRegister');
+Route::post('/register',[AuthController::class,'register'])->name('register');
+Route::get('/logout',[AuthController::class,'logout'])->name('logout');
+
