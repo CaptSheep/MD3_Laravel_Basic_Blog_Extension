@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\AuthServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,12 @@ use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
+    public $authService;
+    public function __construct(AuthServices $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function showFormLogin()
     {
       return view('backend.auth.login');
@@ -18,8 +25,8 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $users = $request->only('email','password');
-        if (Auth::attempt($users)){
+
+        if ($this->authService->login($request)){
             return redirect()->route('posts.index');
         }
         else
@@ -36,9 +43,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $users = $request->only('name','email','password');
-        $users['password'] = Hash::make($users['password']);
-        DB::table('users')->insert($users);
+        $this->authService->create($request);
         return redirect()->route('login');
     }
 
